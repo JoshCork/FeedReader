@@ -1,3 +1,4 @@
+"use strict";
 /* feedreader.js
  *
  * This is the spec file that Jasmine will read and contains
@@ -60,32 +61,81 @@ $(function() {
 
 
     /* TODO: Write a new test suite named "The menu" */
+    describe('the menu', function() {
 
-    /* TODO: Write a test that ensures the menu element is
-     * hidden by default. You'll have to analyze the HTML and
-     * the CSS to determine how we're performing the
-     * hiding/showing of the menu element.
-     */
+        /* This test ensures the menu element is
+         * hidden by default. You'll have to analyze the HTML and
+         * the CSS to determine how we're performing the
+         * hiding/showing of the menu element.
+         */
+        it('should be hidden by default', function() {
+            expect($("body").hasClass("menu-hidden")).toBe(true);
+        });
 
-    /* TODO: Write a test that ensures the menu changes
-     * visibility when the menu icon is clicked. This test
-     * should have two expectations: does the menu display when
-     * clicked and does it hide when clicked again.
-     */
+        /* This test ensures the menu changes
+         * visibility when the menu icon is clicked. This test
+         * has two expectations: does the menu display when
+         * clicked and does it hide when clicked again.
+         */
+        it('should show toggle visibility when clicked', function() {
+            $('.menu-icon-link').trigger('click');
+            expect($("body").hasClass("menu-hidden")).toBe(false);
+            $('.menu-icon-link').trigger('click');
+            expect($("body").hasClass("menu-hidden")).toBe(true);
+        });
+
+    });
 
     /* TODO: Write a new test suite named "Initial Entries" */
+    describe('Initial Entries', function() {
+        /* This test ensures that when the loadFeed
+         * function is called and has completed its work, there is at least
+         * a single .entry element within the .feed container.
+         * The loadFeed() function is asynchronous so this test required
+         * the use of Jasmine's beforeEach and asynchronous done() function.
+         */
+        beforeEach(function(done) {
+            loadFeed(0, function() { done(); });
+        });
 
-    /* TODO: Write a test that ensures when the loadFeed
-     * function is called and completes its work, there is at least
-     * a single .entry element within the .feed container.
-     * Remember, loadFeed() is asynchronous so this test will require
-     * the use of Jasmine's beforeEach and asynchronous done() function.
-     */
+        it('should have at least one entry', function(done) {
+            expect($('.feed').find('.entry').length).toBeGreaterThan(0);
+            done();
+        });
+    });
 
-    /* TODO: Write a new test suite named "New Feed Selection"
+    /* TODO: Write a new test suite named "New Feed Selection"*/
+    describe('New Feed Selection', function() {
+        var initTitle;
+        var currentFeedId = 0;
+
+        beforeEach(function(done) {
+            loadFeed(currentFeedId, function() { done(); });
+        });
+
+        it('should load a first entry', function(done) {
+            initTitle = $('.entry').find('h2')[0];
+            currentFeedId = 1;
+
+            console.log(initTitle);
+            expect($('.feed').find('.entry').length).toBeGreaterThan(0);
+
+            done();
+        });
+
+        it('should be different than last first entry', function(done) {
+
+
+            console.log($('.entry').find('h2')[0]);
+            expect($('.entry').find('h2')[0]).not.toBe(initTitle);
+
+            done();
+        });
 
         /* TODO: Write a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+    });
+
 }());
