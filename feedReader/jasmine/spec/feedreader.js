@@ -10,10 +10,7 @@
  * to ensure they don't run until the DOM is ready.
  */
 $(function() {
-    /* This is our first test suite - a test suite just contains
-     * a related set of tests. This suite is all about the RSS
-     * feeds definitions, the allFeeds variable in our application.
-     */
+    //Testing the rss feeds themselves.
     describe('RSS Feeds', function() {
         /* This is our first test - it tests to make sure that the
          * allFeeds variable has been defined and that it is not
@@ -60,7 +57,7 @@ $(function() {
 
 
 
-    /* TODO: Write a new test suite named "The menu" */
+    // testing that the menu functions properly.
     describe('the menu', function() {
 
         /* This test ensures the menu element is
@@ -86,7 +83,7 @@ $(function() {
 
     });
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+    // Testing initial entries.
     describe('Initial Entries', function() {
         /* This test ensures that when the loadFeed
          * function is called and has completed its work, there is at least
@@ -104,38 +101,40 @@ $(function() {
         });
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection"*/
+    /**
+     * Tests changes to the feed.  This test simulates initializing
+     * the feed reader (at id zero) and then loading a the feed at
+     * position two.  Once that second feed has loaded it compares the
+     * title of the first article to the title of the first article after
+     * the feed has been switched.  It esnsures that they are not the same
+     * title.
+     */
     describe('New Feed Selection', function() {
         var initTitle;
+        var newTitle;
         var currentFeedId = 0;
 
         beforeEach(function(done) {
-            loadFeed(currentFeedId, function() { done(); });
+            loadFeed(currentFeedId, function() {
+                initTitle = $('.entry').find('h2')[0];
+                currentFeedId = 1;
+                loadFeed(currentFeedId, function() {
+                    newTitle = $('.entry').find('h2')[0];
+                    done();
+                });
+                done();
+            });
         });
 
-        it('should load a first entry', function(done) {
-            initTitle = $('.entry').find('h2')[0];
-            currentFeedId = 1;
 
-            console.log(initTitle);
-            expect($('.feed').find('.entry').length).toBeGreaterThan(0);
+        it('should change the first entry.', function(done) {
 
+            expect(initTitle).not.toBe(newTitle);
             done();
+
         });
 
-        it('should be different than last first entry', function(done) {
 
-
-            console.log($('.entry').find('h2')[0]);
-            expect($('.entry').find('h2')[0]).not.toBe(initTitle);
-
-            done();
-        });
-
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
     });
 
 }());
