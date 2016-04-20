@@ -95,9 +95,14 @@ $(function() {
             loadFeed(0, function() { done(); });
         });
 
-        it('should have at least one entry', function(done) {
-            expect($('.feed').find('.entry').length).toBeGreaterThan(0);
-            done();
+        it('should have at least one entry', function() {
+            expect($('.feed .entry').length).toBeGreaterThan(0);
+            // done();
+            /**
+             * Here the done call is not needed, as long as there is no additional code waiting
+             * for this it to finish. Also, apart from deleting the done() call, the done parameter
+             * must be deleted as well.
+             */
         });
     });
 
@@ -116,20 +121,24 @@ $(function() {
 
         beforeEach(function(done) {
             loadFeed(currentFeedId, function() {
-                initTitle = $('.entry').find('h2')[0];
+
+                initTitle = $('.entry').find('h2').first().text();
                 currentFeedId = 1;
                 loadFeed(currentFeedId, function() {
-                    newTitle = $('.entry').find('h2')[0];
+
+                    newTitle = $('.entry').find('h2').first().text();
                     done();
                 });
-                done();
+
             });
         });
 
 
         it('should change the first entry.', function(done) {
 
-            expect(initTitle).not.toBe(newTitle);
+            // expect(initTitle).not.toBe(newTitle);
+
+            expect(initTitle).not.toEqual(newTitle);
             done();
 
         });
